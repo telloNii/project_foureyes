@@ -6,8 +6,21 @@ class HomeScreen extends StatelessWidget {
   final String name = "Todd Nelson";
   final String location = "Accra, GH";
   final Color activeColor = Colors.grey.shade600;
+
   @override
   Widget build(BuildContext context) {
+    double getGridChildRatio() {
+      if (MediaQuery.of(context).orientation == Orientation.portrait &&
+          MediaQuery.of(context).size.longestSide < 900) {
+        return 0.8;
+      } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
+          MediaQuery.of(context).size.longestSide < 900) {
+        return 1;
+      } else {
+        return 1.1;
+      }
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -34,12 +47,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      List ints = [44, 42, 67];
-                      num sum = 0;
-                      ints.forEach((element) {
-                        sum += element;
-                      });
-                      print(sum);
+                      print(MediaQuery.of(context).size.longestSide);
                       print(MediaQuery.of(context).size);
                     },
                     child: CircleAvatar(
@@ -84,123 +92,15 @@ class HomeScreen extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("All"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("GUCCI"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("DIOR"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("PRADA"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("BURBERRY"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("SAINT LAUREN"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("TOMMY HILLFIGER"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("FENDI"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Text("OTHERS"),
-                        ),
-                      ),
-                    ),
+                    CategoriesCard(label: "ALL"),
+                    CategoriesCard(label: "GUCCI"),
+                    CategoriesCard(label: "DIOR"),
+                    CategoriesCard(label: "PRADA"),
+                    CategoriesCard(label: "BURBERRY"),
+                    CategoriesCard(label: "SAINT LAUREN"),
+                    CategoriesCard(label: "TOMMY HILLFIGER"),
+                    CategoriesCard(label: "FENDI"),
+                    CategoriesCard(label: "OTHERS"),
                   ],
                 ),
               ),
@@ -208,10 +108,7 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: Container(
                   child: GridView.count(
-                childAspectRatio:
-                    MediaQuery.of(context).orientation == Orientation.portrait
-                        ? 0.8
-                        : 1,
+                childAspectRatio: getGridChildRatio(),
                 // controller: new ScrollController(keepScrollOffset: false),
                 shrinkWrap: true,
                 crossAxisCount:
@@ -275,8 +172,10 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 50),
+        alignment: Alignment.centerLeft,
+        // margin: const EdgeInsets.symmetric(horizontal: 50),
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
+        width: MediaQuery.of(context).size.shortestSide * 0.5,
         height: 60,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -303,6 +202,28 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class CategoriesCard extends StatelessWidget {
+  CategoriesCard({required this.label});
+  late final String label;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.grey, borderRadius: BorderRadius.circular(30)),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text(label),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class ProductCard extends StatelessWidget {
   ProductCard({required this.image, required this.price, required this.title});
   late final String image;
@@ -311,6 +232,22 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double getProductCardTextSize() {
+      if (MediaQuery.of(context).orientation == Orientation.portrait ||
+          MediaQuery.of(context).orientation == Orientation.portrait &&
+              MediaQuery.of(context).size.longestSide < 600 &&
+              MediaQuery.of(context).size.shortestSide < 450) {
+        return 12;
+      } else if (MediaQuery.of(context).orientation == Orientation.portrait ||
+          MediaQuery.of(context).orientation == Orientation.portrait &&
+              MediaQuery.of(context).size.longestSide < 900 &&
+              MediaQuery.of(context).size.shortestSide < 450) {
+        return 15;
+      } else {
+        return 24;
+      }
+    }
+
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -320,7 +257,7 @@ class ProductCard extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
-              height: 180,
+              height: MediaQuery.of(context).size.longestSide * (0.22),
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(image),
@@ -332,13 +269,33 @@ class ProductCard extends StatelessWidget {
                     topRight: Radius.circular(10)),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(title),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text("\$$price"),
+            Expanded(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 2),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: getProductCardTextSize(),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          "\$$price",
+                          style: TextStyle(fontSize: getProductCardTextSize()),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             )
           ]),
         ));
