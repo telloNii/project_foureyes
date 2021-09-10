@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_foureyes/screens/cart_screen.dart';
+import 'package:project_foureyes/screens/view_item_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static final String id = "HomeScreenRoute";
@@ -165,17 +167,16 @@ class HomeScreen extends StatelessWidget {
                 ],
               )),
             ),
-            Container(
-              height: 50.0,
+            SizedBox(
+              height: 50,
             )
           ],
         ),
       ),
       floatingActionButton: Container(
-        alignment: Alignment.centerLeft,
         // margin: const EdgeInsets.symmetric(horizontal: 50),
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
-        width: MediaQuery.of(context).size.shortestSide * 0.5,
+        width: MediaQuery.of(context).size.shortestSide * 0.6,
         height: 60,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -183,21 +184,33 @@ class HomeScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.home_filled,
-              color: Colors.white,
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.home_filled,
+                color: Colors.white,
+              ),
             ),
-            Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.white,
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, CartScreen.id);
+              },
+              icon: Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.white,
+              ),
             ),
-            Icon(
-              Icons.settings,
-              color: Colors.white,
-            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+            )
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
@@ -233,15 +246,15 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double getProductCardTextSize() {
-      if (MediaQuery.of(context).orientation == Orientation.portrait ||
-          MediaQuery.of(context).orientation == Orientation.portrait &&
-              MediaQuery.of(context).size.longestSide < 600 &&
-              MediaQuery.of(context).size.shortestSide < 450) {
+      if ((MediaQuery.of(context).orientation == Orientation.portrait ||
+              MediaQuery.of(context).orientation == Orientation.landscape) &&
+          (MediaQuery.of(context).size.longestSide < 600 &&
+              MediaQuery.of(context).size.shortestSide < 450)) {
         return 12;
-      } else if (MediaQuery.of(context).orientation == Orientation.portrait ||
-          MediaQuery.of(context).orientation == Orientation.portrait &&
-              MediaQuery.of(context).size.longestSide < 900 &&
-              MediaQuery.of(context).size.shortestSide < 450) {
+      } else if ((MediaQuery.of(context).orientation == Orientation.portrait ||
+              MediaQuery.of(context).orientation == Orientation.landscape) &&
+          (MediaQuery.of(context).size.longestSide < 900 &&
+              MediaQuery.of(context).size.shortestSide < 500)) {
         return 15;
       } else {
         return 24;
@@ -252,21 +265,32 @@ class ProductCard extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.grey,
+              color: Colors.grey.shade300,
               borderRadius: BorderRadius.all(Radius.circular(10))),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              height: MediaQuery.of(context).size.longestSide * (0.22),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(image),
-                    alignment: Alignment.topRight,
-                    fit: BoxFit.fill),
-                color: Colors.grey,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ItemViewScreen(
+                              label: title,
+                              image: image,
+                              price: price,
+                            )));
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.longestSide * (0.22),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(image),
+                      alignment: Alignment.topRight,
+                      fit: BoxFit.fill),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                ),
               ),
             ),
             Expanded(
