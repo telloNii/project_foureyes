@@ -1,13 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_foureyes/models/brands.dart';
+import 'package:project_foureyes/models/home_screen_items.dart';
 import 'package:project_foureyes/screens/cart_screen.dart';
 import 'package:project_foureyes/screens/view_item_screen.dart';
+import 'package:project_foureyes/widgets/product_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static final String id = "HomeScreenRoute";
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final String name = "Todd Nelson";
+
   final String location = "Accra, GH";
+
   final Color activeColor = Colors.grey.shade600;
+
+  List<ProductCard> _displayItems = displayAllItems;
 
   @override
   Widget build(BuildContext context) {
@@ -91,19 +104,18 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Container(
                 height: 30,
-                child: ListView(
+                child: ListView.builder(
+                  itemCount: brands.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _displayItems = selectDisplayBrands[index];
+                          });
+                        },
+                        child: CategoriesCard(label: brands[index]));
+                  },
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    CategoriesCard(label: "ALL"),
-                    CategoriesCard(label: "GUCCI"),
-                    CategoriesCard(label: "DIOR"),
-                    CategoriesCard(label: "PRADA"),
-                    CategoriesCard(label: "BURBERRY"),
-                    CategoriesCard(label: "SAINT LAUREN"),
-                    CategoriesCard(label: "TOMMY HILLFIGER"),
-                    CategoriesCard(label: "FENDI"),
-                    CategoriesCard(label: "OTHERS"),
-                  ],
                 ),
               ),
             ),
@@ -117,54 +129,7 @@ class HomeScreen extends StatelessWidget {
                     MediaQuery.of(context).orientation == Orientation.portrait
                         ? 2
                         : 3,
-                children: [
-                  ProductCard(
-                      image: "assets/images/fendi/fiery FENDI.jpg",
-                      price: 25.99,
-                      title: "Fendi  Frames"),
-                  ProductCard(
-                      image:
-                          "assets/images/saint lauren/photo_2021-09-08_00-27-36.jpg",
-                      price: 39.99,
-                      title: "Saint Lauren Frames"),
-                  ProductCard(
-                      image:
-                          "assets/images/burberry/photo_2021-09-08_00-28-37.jpg",
-                      price: 19.99,
-                      title: "Burberry Frames"),
-                  ProductCard(
-                      image: "assets/images/dior/photo_2021-09-08_00-27-25.jpg",
-                      price: 25.99,
-                      title: "Christian Dior Frames"),
-                  ProductCard(
-                      image:
-                          "assets/images/prada/photo_2021-09-08_00-28-59.jpg",
-                      price: 22.00,
-                      title: "Prada Frames"),
-                  ProductCard(
-                      image:
-                          "assets/images/tommy hillfiger/photo_2021-09-08_00-28-31.jpg",
-                      price: 30.00,
-                      title: "Tommy Hillfiger Frames"),
-                  ProductCard(
-                      image: "assets/images/yilina/Yilina TR eyewear.jpg",
-                      price: 19.99,
-                      title: "Yilina Frames"),
-                  ProductCard(
-                      image: "assets/images/fendi/fiery FENDI.jpg",
-                      price: 25.99,
-                      title: "Fendi  Frames"),
-                  ProductCard(
-                      image:
-                          "assets/images/burberry/photo_2021-09-08_00-28-37.jpg",
-                      price: 19.99,
-                      title: "Burberry Frames"),
-                  ProductCard(
-                      image:
-                          "assets/images/tommy hillfiger/photo_2021-09-08_00-28-31.jpg",
-                      price: 30.00,
-                      title: "Tommy Hillfiger Frames"),
-                ],
+                children: _displayItems,
               )),
             ),
             SizedBox(
@@ -234,94 +199,5 @@ class CategoriesCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  ProductCard({required this.image, required this.price, required this.title});
-  late final String image;
-  late final String title;
-  late final double price;
-
-  @override
-  Widget build(BuildContext context) {
-    double getProductCardTextSize() {
-      if ((MediaQuery.of(context).orientation == Orientation.portrait ||
-              MediaQuery.of(context).orientation == Orientation.landscape) &&
-          (MediaQuery.of(context).size.longestSide < 600 &&
-              MediaQuery.of(context).size.shortestSide < 450)) {
-        return 12;
-      } else if ((MediaQuery.of(context).orientation == Orientation.portrait ||
-              MediaQuery.of(context).orientation == Orientation.landscape) &&
-          (MediaQuery.of(context).size.longestSide < 900 &&
-              MediaQuery.of(context).size.shortestSide < 500)) {
-        return 15;
-      } else {
-        return 24;
-      }
-    }
-
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ItemViewScreen(
-                              label: title,
-                              image: image,
-                              price: price,
-                            )));
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.longestSide * (0.22),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(image),
-                      alignment: Alignment.topRight,
-                      fit: BoxFit.fill),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 2),
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: getProductCardTextSize(),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          "\$$price",
-                          style: TextStyle(fontSize: getProductCardTextSize()),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ]),
-        ));
   }
 }

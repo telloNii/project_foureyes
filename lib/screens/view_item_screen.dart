@@ -1,12 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_foureyes/models/cart_items.dart';
+import 'package:project_foureyes/models/products.dart';
 import 'package:project_foureyes/screens/cart_screen.dart';
+import 'package:project_foureyes/widgets/cart_card.dart';
+import 'package:provider/provider.dart';
 
-class ItemViewScreen extends StatelessWidget {
+class ItemViewScreen extends StatefulWidget {
   static final String id = "Item view screen";
   ItemViewScreen({this.label, this.image, this.price});
   late final String? image, label;
   late final double? price;
+
+  @override
+  _ItemViewScreenState createState() => _ItemViewScreenState();
+}
+
+class _ItemViewScreenState extends State<ItemViewScreen> {
+  int unit = 1;
+  late int dropDownValue = 1;
+  int maxItemNumber = 10;
+  final List<int> listItems = List.generate(10, (index) => index + 1);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +41,7 @@ class ItemViewScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage(
-                            image!,
+                            widget.image!,
                           ),
                           fit: BoxFit.fill),
                     ),
@@ -77,7 +92,7 @@ class ItemViewScreen extends StatelessWidget {
                               Expanded(
                                 flex: 5,
                                 child: Text(
-                                  label!,
+                                  widget.label!,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24),
@@ -86,7 +101,7 @@ class ItemViewScreen extends StatelessWidget {
                               Expanded(
                                 flex: 2,
                                 child: Text(
-                                  "\$$price",
+                                  "\$${widget.price! * dropDownValue}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24),
@@ -116,6 +131,11 @@ class ItemViewScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: GestureDetector(
                         onTap: () {
+                          setState(() {
+                            Provider.of<CartItems>(context, listen: false)
+                                .addToCart(0, dropDownValue);
+                          });
+                          print(dropDownValue);
                           Navigator.pushNamed(context, CartScreen.id);
                         },
                         child: Material(
@@ -139,7 +159,24 @@ class ItemViewScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: Colors.grey.shade600,
                           borderRadius: BorderRadius.circular(30)),
-                      child: FoureyesDropDown(),
+                      child: DropdownButton(
+                        items: listItems.map((int item) {
+                          return DropdownMenuItem<int>(
+                            child: Text(
+                              ' $item',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            value: item,
+                          );
+                        }).toList(),
+                        onChanged: (int? value) {
+                          setState(() {
+                            dropDownValue = value!;
+                          });
+                        },
+                        value: dropDownValue,
+                      ),
                     )
                   ],
                 ),
@@ -148,38 +185,6 @@ class ItemViewScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class FoureyesDropDown extends StatefulWidget {
-  @override
-  _FoureyesDropDownState createState() => _FoureyesDropDownState();
-}
-
-class _FoureyesDropDownState extends State<FoureyesDropDown> {
-  int _dropDownValue = 1;
-  int maxItemNumber = 10;
-  final List<int> listItems = List.generate(10, (index) => index + 1);
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton(
-      value: _dropDownValue,
-      items: listItems.map((int item) {
-        return DropdownMenuItem<int>(
-          child: Text(
-            ' $item',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          value: item,
-        );
-      }).toList(),
-      onChanged: (int? value) {
-        setState(() {
-          _dropDownValue = value!;
-        });
-      },
     );
   }
 }
